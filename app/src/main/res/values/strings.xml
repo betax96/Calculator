@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">Calculator</string>
+
+    <string name="sum_sym">+</string>
+    <string name="subt_sym">−</string>
+    <string name="minus_sym">-</string>
+    <string name="mult_sym">×</string>
+    <string name="div_sym">÷</string>
+    <string name="equal_sym">=</string>
+    <string name="clear_sym">c</string>
+    <string name="dot_sym">.</string>
+    <string name="plus_minus_sym">±</string>
+    <string name="backspace_sym">&#xF1D9;</string>
+    <string name="radic_sym">√</string>
+
+    <string name="err_divide_by_zero">Cannot divide by zero</string>
+    <string name="result_err">ERROR</string>
+
+</resources>
