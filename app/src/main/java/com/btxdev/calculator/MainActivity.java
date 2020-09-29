@@ -3,6 +3,7 @@ package com.btxdev.calculator;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -18,11 +19,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private EditText edtScreen;
 
-    private Pattern operationPattern = Pattern.compile("(\\-?[0-9]+(\\.[0-9]*)?)(([\\+\\−\\×\\÷])(\\-?[0-9]+(\\.[0-9]*)?))*");
-    private Pattern multDivPattern = Pattern.compile("(\\-?[0-9]+(\\.[0-9]*)?)([\\×\\÷])(\\-?[0-9]+(\\.[0-9]*)?)");
-    private Pattern sumSubtPattern = Pattern.compile("(\\-?[0-9]+(\\.[0-9]*)?)([\\+\\−])(\\-?[0-9]+(\\.[0-9]*)?)");
-    private Pattern plusMinusPattern = Pattern.compile("(\\-)?([0-9]+(\\.[0-9]*)?)$");
-    private Pattern radicPattern = Pattern.compile("([0-9]+(\\.[0-9]*)?)$");
+    private Pattern operationPattern = Pattern.compile("(\\-?[0-9]+(\\.[0-9]*)?(E[0-9]+)?)(([\\+\\−\\×\\÷])(\\-?[0-9]+(\\.[0-9]*)?(E[0-9]+)?))*");
+    private Pattern multDivPattern = Pattern.compile("(\\-?[0-9]+(\\.[0-9]*)?(E[0-9]+)?)([\\×\\÷])(\\-?[0-9]+(\\.[0-9]*)?(E[0-9]+)?)");
+    private Pattern sumSubtPattern = Pattern.compile("(\\-?[0-9]+(\\.[0-9]*)?(E[0-9]+)?)([\\+\\−])(\\-?[0-9]+(\\.[0-9]*)?(E[0-9]+)?)");
+    private Pattern plusMinusPattern = Pattern.compile("(\\-)?([0-9]+(\\.[0-9]*)?(E[0-9]+)?)$");
+    private Pattern radicPattern = Pattern.compile("([0-9]+(\\.[0-9]*)?(E[0-9]+)?)$");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -151,7 +152,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 try {
                     equal();
                 } catch (Exception e) {
-                    Toast.makeText(getApplicationContext(),e.getMessage(),Toast.LENGTH_SHORT).show();
+                    Log.e("Calc",Log.getStackTraceString(e));
+                    if(e.getMessage()==null||e.getMessage().length()==0){
+                        Toast.makeText(getApplicationContext(),Log.getStackTraceString(e),Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(getApplicationContext(),e.getMessage(),Toast.LENGTH_SHORT).show();
+                    }
                 }
                 break;
 
@@ -215,8 +221,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Matcher matcherMultDiv = multDivPattern.matcher(operationText);
             while(matcherMultDiv.find()){
                 double value1 = Double.parseDouble(matcherMultDiv.group(1));
-                double value2 = Double.parseDouble(matcherMultDiv.group(4));
-                String operation = matcherMultDiv.group(3);
+                double value2 = Double.parseDouble(matcherMultDiv.group(5));
+                String operation = matcherMultDiv.group(4);
 
                 double result;
 
@@ -236,8 +242,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Matcher matcherSumSubt = sumSubtPattern.matcher(operationText);
             while(matcherSumSubt.find()){
                 double value1 = Double.parseDouble(matcherSumSubt.group(1));
-                double value2 = Double.parseDouble(matcherSumSubt.group(4));
-                String operation = matcherSumSubt.group(3);
+                double value2 = Double.parseDouble(matcherSumSubt.group(5));
+                String operation = matcherSumSubt.group(4);
 
                 double result;
 
@@ -257,8 +263,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private String getStringResult(double result){
         if(isInteger(result)){
-            int integer = (int) result;
-            return Integer.toString(integer);
+            return Double.toString(result).replace(".0","");
         }else{
             return Double.toString(result);
         }
